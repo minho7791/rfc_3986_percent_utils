@@ -38,3 +38,10 @@ assert path_codec.decode("a%20b%2Fc") == "a b/c"
 ## Awkward edge
 
 `PercentCodec.decode("%C3%29")` raises `UnicodeDecodeError` because `0xC3 0x29` is not a valid UTF-8 sequence. If you would rather get the raw bytes and inspect them yourself, call `decode_bytes`, which never raises and returns the raw `bytes`.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
